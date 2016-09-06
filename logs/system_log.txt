@@ -1,0 +1,2 @@
+2016-09-04 10:40:31 | LOG CLEARED by USER ID 9
+2016-09-04 21:31:10 | Login: nscherneck logged in.
