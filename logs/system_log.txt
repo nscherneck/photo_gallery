@@ -1,2 +1,15 @@
 2016-09-04 10:40:31 | LOG CLEARED by USER ID 9
 2016-09-04 21:31:10 | Login: nscherneck logged in.
+2016-09-07 11:42:14 | Login: nscherneck logged in.
+2016-09-07 11:42:16 | Logout:  logged out.
+2016-09-07 11:42:23 | Login: nscherneck logged in.
+2016-09-07 11:44:26 | Logout:  logged out.
+2016-09-07 11:44:31 | Login: nscherneck logged in.
+2016-09-07 11:44:32 | Logout:  logged out.
+2016-09-07 11:44:37 | Login: nscherneck logged in.
+2016-09-07 12:12:32 | Logout: 9 logged out.
+2016-09-07 12:12:37 | Login: nscherneck logged in.
+2016-09-07 12:12:52 | Logout: 9 logged out.
+2016-09-07 13:01:13 | Login: nscherneck5 logged in.
+2016-09-07 13:01:25 | Logout: 16 logged out.
+2016-09-07 13:01:30 | Login: nscherneck logged in.
