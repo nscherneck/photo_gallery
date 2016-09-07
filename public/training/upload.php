@@ -1,7 +1,40 @@
 <?php
 
+// In an application, this could be moved to a config file
+$upload_errors = array(
+	// http://www.php.net/manual/en/features.file-upload.errors.php
+	UPLOAD_ERR_OK 				=> "No errors.",
+	UPLOAD_ERR_INI_SIZE  	=> "Larger than upload_max_filesize.",
+  UPLOAD_ERR_FORM_SIZE 	=> "Larger than form MAX_FILE_SIZE.",
+  UPLOAD_ERR_PARTIAL 		=> "Partial upload.",
+  UPLOAD_ERR_NO_FILE 		=> "No file.",
+  UPLOAD_ERR_NO_TMP_DIR => "No temporary directory.",
+  UPLOAD_ERR_CANT_WRITE => "Can't write to disk.",
+  UPLOAD_ERR_EXTENSION 	=> "File upload stopped by extension."
+);
 
- ?>
+if(isset($_POST['submit']) && isset($_FILES['file_upload'])) {
+  $tmp_file = $_FILES['file_upload']['tmp_name'];
+  $target_file = basename($_FILES['file_upload']['name']);
+  $upload_dir = "../uploads";
+
+  // it's a good idea to use file_exists here to first check if there's
+  // already a file of the same name
+
+  if(file_exists($upload_dir . "/" . $target_file)) {
+    $message = "Error: This file already exists.";
+  } else {
+    if(move_uploaded_file($tmp_file, $upload_dir . "/" . $target_file)) {
+      $message = "File uploaded successfully.";
+  } else {
+        $error = $_FILES['file_upload']['error'];
+        $message = $upload_errors[$error];
+    }
+  }
+}
+
+
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -25,12 +58,12 @@
 
      ?>
     <?php if(!empty($message)) { echo "<p>{$message}</p>"; } ?>
-    <form action="upload.php" enctype="mutipart/form-data" method="POST">
+    <form action="upload.php" enctype="multipart/form-data" method="POST">
 
       <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
       <input type="file" name="file_upload">
 
-      <input type="submit" value="Upload">
+      <input type="submit" name="submit" value="Upload">
 
     </form>
 

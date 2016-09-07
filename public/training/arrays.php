@@ -31,4 +31,8 @@ foreach ($new as $val) {
     echo $val . "<br>\n";
 }
 
+echo "<hr>";
+
+echo $data['Manufacturer'];
+
  ?>
