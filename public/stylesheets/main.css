@@ -41,14 +41,19 @@ a {
 }
 
 #header {
-    height: 70px;
+    height: 80px;
     text-align: left;
-    background: #519D9E;
+    background: #77AF9C;
     color: #FFFFFF;
 }
 
 #header h1 {
-    padding: 1em;
+    padding: .5em .2em .5em .5em;
+    margin: 0;
+}
+
+#header p {
+    padding: .2em .2em .5em 1.1em;
     margin: 0;
 }
 
@@ -58,7 +63,7 @@ a {
 #main {
     min-height: 600px;
     width: 100%;
-    background: #D1B6E1;
+    background: #D7FFF1;
     padding: 2em;
 }
 
@@ -66,7 +71,7 @@ a {
     height: 2em;
     padding: 1em;
     text-align: center;
-    background: #1A446C;
+    background: #77AF9C;
     color: #D4E6F4;
 }
 
