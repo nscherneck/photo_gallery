@@ -2,45 +2,120 @@
 
 require_once(LIB_PATH . DS . "database.php");
 
-class User extends DatabaseObject {
+class Photograph extends DatabaseObject {
 
-// remember to review the inherited methods from the DatabaseObject class
-
-
-// properties
-
-  protected static $table_name = "users";
-  protected static $db_fields = array('id', 'username', 'password', 'first_name', 'last_name');
+  protected static $table_name = "photographs";
+  protected static $db_fields = array('id', 'filename', 'type', 'size', 'caption');
   public $id;
-  public $username;
-  public $password;
-  public $first_name;
-  public $last_name;
+  public $filename;
+  public $type;
+  public $size;
+  public $caption;
 
+  private $tmp_path;
+  protected $upload_dir = "images";
+  public $errors = array();
+  protected $upload_errors = array(
+  	// http://www.php.net/manual/en/features.file-upload.errors.php
+  	UPLOAD_ERR_OK 				=> "No errors.",
+  	UPLOAD_ERR_INI_SIZE  	=> "Larger than upload_max_filesize.",
+    UPLOAD_ERR_FORM_SIZE 	=> "Larger than form MAX_FILE_SIZE.",
+    UPLOAD_ERR_PARTIAL 		=> "Partial upload.",
+    UPLOAD_ERR_NO_FILE 		=> "No file.",
+    UPLOAD_ERR_NO_TMP_DIR => "No temporary directory.",
+    UPLOAD_ERR_CANT_WRITE => "Can't write to disk.",
+    UPLOAD_ERR_EXTENSION 	=> "File upload stopped by extension."
+  );
 
-/* ---------------------------------------------------------*/
+// pass in $_FILE(['uploaded_file']) as an argument
+  public function attach_file($file) {
+    // perform error checking on the form parameters
+    if(!$file || empty($file) || !is_array($file)) {
 
+      // error: nothing uploaded or wrong argument usage
+      $this->errors[] = "No file was uploaded";
+      return false;
 
-// methods
+      } elseif($file['error'] != 0) {
 
-  public function full_name() {
-      if (isset($this->first_name) && (isset($this->last_name))) {
-        return $this->first_name . " " . $this->last_name;
+        $this->errors[] = $this->upload_errors[$file['error']];
+        return false;
+
+        } else {
+
+          // set object attributes to the form parameters
+          $this->tmp_path = $file['tmp_name'];
+          $this->filename = basename($file['name']);
+          $this->type = $file['type'];
+          $this->size = $file['size'];
+          return true;
+
+        }
+}
+
+  public function save() {
+    // a new record won't have an id yet
+    if(isset($this->id) && ($this->id > 0)) {
+      // really only used to update the caption
+      $this->update();
+    } else {
+      // make sure there are no errors
+      // can't save if there are pre-existing errors
+      if(!empty($this->errors)) { return false; }
+
+      // verify the caption isn't too long for the database
+      if(strlen($this->caption) > 255) {
+        $this->errors[] = "Caption must be fewer than 255 characters.";
+        return false;
+      }
+
+      // can't save without filename and temp location
+      if(empty($this->filename) || empty($this->tmp_path)) {
+        $this->errors[] = "The file location was not available.";
+        return false;
+      }
+
+      // determine the target_path
+      $target_path = SITE_ROOT . DS . 'public' . DS . $this->upload_dir . DS . $this->filename;
+
+      // verify the file doesn't already exist
+      if(file_exists($target_path)) {
+        $this->errors[] = "The file {$this->filename} already exists.";
+        return false;
+      }
+
+      // attempt to move the file
+      if(move_uploaded_file($this->tmp_path, $target_path)) {
+        // save a corresponding entry to the database
+        if($this->create()) {
+          // we're done with $tmp_path.  the file isn't there anymore
+          unset($this->tmp_path);
+          return true;
+        }
       } else {
-        return "";
+        $this->errors[] = "The file upload failed, possibly due to incorrect permissions on the upload folder.";
+        return false;
       }
     }
+  }
 
-  public static function authenticate($username="", $password="") {
-      global $database;
-      $username = $database->escape_value($username);
-      $password = $database->escape_value($password);
+  public function image_path() {
+    return $this->upload_dir . DS . $this->filename;
+  }
 
-      $sql = "SELECT * FROM users WHERE username = '{$username}' AND password = '{$password}' LIMIT 1";
-      $result_array = self::find_by_sql($sql);
-      return !empty($result_array) ? array_shift($result_array) : false;
-
+  public function size_as_text() {
+    if($this->size < 1024) {
+      return "{$this->size} bytes";
+    } elseif($this->size < 1048576) {
+      $size_kb = round($this->size / 1024);
+      return "{$size_kb} KB";
+    } else {
+      $size_mb = round($this->size / 1048576, 2);
+      return "{$size_mb} MB";
     }
+  }
+
+// common database methods
 
   public static function find_all() {
     return self::find_by_sql("SELECT * FROM " . self::$table_name);
@@ -92,13 +167,11 @@ class User extends DatabaseObject {
 
       // get_object_vars returns an associative array with all attributes
       // (including private attributes!) as the keys and their current values as the value
-      $object_vars = $this->attributes();
+      // $object_vars = $this->attributes();
       // we don't care about the value, we just want to know if the key exists
       // will return True or False
       return array_key_exists($attribute, $this->attributes());
     }
-
-// instance methods
 
   protected function attributes() {
     // return an associative array of attribute keys and their values
@@ -115,17 +188,17 @@ class User extends DatabaseObject {
     global $database;
     $clean_attributes = array();
     // sanitize the values before submitting
-    // Not: does not alter the actual value of each attribute
+    // Note: does not alter the actual value of each attribute
     foreach($this->attributes() as $key => $value) {
       $clean_attributes[$key] = $database->escape_value($value);
     }
     return $clean_attributes;
   }
 
-  public function save() {
-    // a new record won't yet have an id
-    return isset($this->id) ? $this->update() : $this->create();
-  }
+  // public function save() {
+  //   // a new record won't yet have an id
+  //   return isset($this->id) ? $this->update() : $this->create();
+  // }
 
   public function create() {
     global $database;
@@ -140,15 +213,12 @@ class User extends DatabaseObject {
     $sql .= ") VALUES ('";
     $sql .= join("', '", array_values($attributes));
     $sql .= "')";
-
-    $sql .= $database->escape_value($this->last_name) . "')";
     if($database->query($sql)) {
       $this->id = $database->insert_id();
       return true;
     } else {
       return false;
     }
-
   }
 
   public function update() {
@@ -186,9 +256,6 @@ class User extends DatabaseObject {
 
   }
 
-
-// end of User class
-
 }
 
-?>
+ ?>

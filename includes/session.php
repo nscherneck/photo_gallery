@@ -10,10 +10,12 @@ class Session {
 
   private $logged_in = false;
   public $user_id;
+  public $message;
 
   function __construct() {
     session_start();
     $this->check_login();
+    $this->check_message();
     if($this->logged_in) {
       // actions to take immediately if user is logged in
     } else {
@@ -39,6 +41,16 @@ class Session {
     $this->logged_in = false;
   }
 
+  public function message($msg="") {
+    if(!empty($msg)) {
+      // then this is your message
+      // make sure you understand why $this->message = $msg wouldn't work
+      $_SESSION['message'] = $msg;
+    } else {
+      return $this->message;
+    }
+  }
+
   private function check_login() {
     if(isset($_SESSION['user_id'])) {
       $this->user_id = $_SESSION['user_id'];
@@ -46,6 +58,16 @@ class Session {
     } else {
       unset($this->user_id);
       $this->logged_in = false;
+    }
+  }
+
+  private function check_message() {
+    // is there a message stored in the session?
+    if(isset($_SESSION['message'])) {
+      $this->message = $_SESSION['message'];
+      unset($_SESSION['message']);
+    } else {
+      $this->message = "";
     }
   }
 

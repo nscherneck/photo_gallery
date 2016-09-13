@@ -41,7 +41,7 @@ a {
 }
 
 #header {
-    height: 80px;
+    height: 100px;
     text-align: left;
     background: #77AF9C;
     color: #FFFFFF;
@@ -73,6 +73,18 @@ a {
     text-align: center;
     background: #77AF9C;
     color: #D4E6F4;
+}
+
+#photo {
+    width: 300px;
+    margin: 1em 0 0 0;
+    padding: .75em;
+    text-align: left;
+    background: #77AF9C;
+    color: #D4E6F4;
+    border: 1px;
+    border-color: #DDD;
+    border-radius: 5px;
 }
 
 table.bordered tr th, table.bordered tr td {
