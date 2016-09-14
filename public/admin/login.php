@@ -26,6 +26,7 @@ if (isset($_POST['submit'])) { // form has been submitted
   $message = "Enter Username and Password";
 }
 ?>
+
 <html>
   <head>
     <link href="../stylesheets/main.css" media="all" rel="stylesheet" type="text/css" />
@@ -34,8 +35,10 @@ if (isset($_POST['submit'])) { // form has been submitted
   <body>
     <div id="header">
       <h1>Photo Gallery</h1>
+      <p><a href="../index.php">Home</a> | <a href="../gallery.php">Photo Gallery</a> | <a href="register.php">Register</a>
     </div>
     <div id="main">
+
       <h2>Staff Login</h2>
       <?php echo output_message($message); ?>
 
@@ -60,11 +63,5 @@ if (isset($_POST['submit'])) { // form has been submitted
           </tr>
         </table>
       </form>
-    </div>
 
-    <div id="footer">Copyright <?php echo date("Y", time()); ?>, Nathan Scherneck
-    </div>
-
-  </body>
-</html>
-<?php if(isset($database->connection)) { $database->close_connection(); } ?>
+<?php include_layout_template('footer.php'); ?>

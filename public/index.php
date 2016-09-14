@@ -2,10 +2,7 @@
 
 <?php include_layout_template('header.php'); ?>
 
-      <h2>Menu</h2>
-
-      <a href="register.php">Register</a><br>
-      <a href="admin/login.php">Login</a><br><br>
+      <h2>Welcome!</h2>
 
 <?php
 

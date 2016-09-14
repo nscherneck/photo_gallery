@@ -43,7 +43,7 @@ a {
 #header {
     height: 100px;
     text-align: left;
-    background: #77AF9C;
+    background: #8EC0E4;
     color: #FFFFFF;
 }
 
@@ -57,34 +57,51 @@ a {
     margin: 0;
 }
 
+#header a {
+    text-decoration: none;
+    color: #FFFFFF;
+}
 
 /* Note: IE 5 & 6 won't understand min-height */
 
 #main {
     min-height: 600px;
     width: 100%;
-    background: #D7FFF1;
+    background: #9baec8;
     padding: 2em;
+    overflow: auto;
 }
 
 #footer {
     height: 2em;
     padding: 1em;
     text-align: center;
-    background: #77AF9C;
+    background: #8EC0E4;
     color: #D4E6F4;
+    clear: left;
 }
 
 #photo {
     width: 300px;
-    margin: 1em 0 0 0;
+    display: inline-block;
+    /*float: left;*/
+    margin: 2em 0 4em .5em;
     padding: .75em;
     text-align: left;
-    background: #77AF9C;
+    background: #8EC0E4;
     color: #D4E6F4;
-    border: 1px;
-    border-color: #DDD;
-    border-radius: 5px;
+    border: 2px solid #a3a1a1;
+    /*border-color: #DDD;*/
+    border-radius: 10px;
+  }
+
+#photo p {
+  color: #fff;
+}
+
+#photo a {
+  color: #fff;
+  text-decoration: none;
 }
 
 table.bordered tr th, table.bordered tr td {

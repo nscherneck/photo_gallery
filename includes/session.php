@@ -10,6 +10,7 @@ class Session {
 
   private $logged_in = false;
   public $user_id;
+  public $username;
   public $message;
 
   function __construct() {
@@ -31,6 +32,7 @@ class Session {
     // database should find user based on username/password
     if($user) {
       $this->user_id = $_SESSION['user_id'] = $user->id;
+      $this->username = $_SESSION['username'] = $user->username;
       $this->logged_in = true;
     }
   }
@@ -38,6 +40,8 @@ class Session {
   public function logout() {
     unset($_SESSION['user_id']);
     unset($this->user_id);
+    unset($_SESSION['username']);
+    unset($this->username);
     $this->logged_in = false;
   }
 

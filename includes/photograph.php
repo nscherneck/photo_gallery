@@ -99,6 +99,19 @@ class Photograph extends DatabaseObject {
     }
   }
 
+  public function destroy() {
+    // first remove the database entry
+    if($this->delete()) {
+      // then remove the file
+      $target_path = SITE_ROOT . DS . 'public' . DS . $this->image_path();
+      return unlink($target_path) ? true : false;
+    } else {
+      // database delete failed
+      return false;
+    }
+
+  }
+
   public function image_path() {
     return $this->upload_dir . DS . $this->filename;
   }
@@ -123,7 +136,7 @@ class Photograph extends DatabaseObject {
 
   public static function find_by_id($id=0) {
     global $database;
-    $result_array = self::find_by_sql("SELECT * FROM " . self::$table_name . " WHERE id={$id} LIMIT 1");
+    $result_array = self::find_by_sql("SELECT * FROM " . self::$table_name . " WHERE id=" . $database->escape_value($id) . " LIMIT 1");
     return !empty($result_array) ? array_shift($result_array) : false;
   }
 
