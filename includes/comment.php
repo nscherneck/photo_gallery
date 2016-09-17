@@ -65,11 +65,11 @@ At {$this->created}, {$this->author} wrote:
 EMAILBODY;
 
     $mail->IsSMTP();
-    $mail->Host = "smtp.centurylink.net";
+    $mail->Host = "";
     $mail->Port = 25;
     $mail->SMTPAuth = true;
-    $mail->Username = "daniellehorwitz@centurylink.net";
-    $mail->Password = "Munchkin88";
+    $mail->Username = "";
+    $mail->Password = "";
 
     $result = $mail->Send();
     return $result;
