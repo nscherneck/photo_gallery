@@ -19,6 +19,7 @@ if(!$session->is_logged_in()) {redirect_to("login.php");}
         echo "<p>" . $photo->caption . "</p>" . PHP_EOL;
         echo "<p>" . $photo->size_as_text() . "</p>" . PHP_EOL;
         echo "<p>" . $photo->id . "</p>" . PHP_EOL;
+        echo "<a href=\"manage_comments.php?id={$photo->id}\">Comments: " . count($photo->comments()) . "</a>" . PHP_EOL . "<br><br>";
         echo "<a href=\"delete_photo.php?id={$photo->id}\">Delete</a>";
         echo "</div>" . PHP_EOL ;
       }

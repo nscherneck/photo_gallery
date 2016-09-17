@@ -39,11 +39,7 @@ function include_layout_template($template="") {
 
 function log_action($action, $message="") {
 
-/* ---------------------------------------*/
-
   $file = SITE_ROOT . DS . 'logs' . DS . 'system_log.txt';
-
-/* ---------------------------------------*/
 
   if(!(file_exists($file))) {
     if($handle = fopen($file, 'w')) { // overwrite
@@ -51,17 +47,19 @@ function log_action($action, $message="") {
       fwrite($handle, $content); // returns number of bytes or false
     fclose($handle);
     }
+  } elseif($handle = fopen($file, 'a')) {
+    $content = date('Y-m-d H:i:s') . " | " . $action . $message . "\n";
+    fwrite($handle, $content);
+  fclose($handle);
   }
-
-/* ---------------------------------------*/
-
-if($handle = fopen($file, 'a')) {
-  $content = date('Y-m-d H:i:s') . " | " . $action . $message . "\n";
-  fwrite($handle, $content);
-fclose($handle);
 }
 
 
+function datetime_to_text($datetime="") {
+  $unixdatetime = strtotime($datetime);
+  return strftime("%B %d, %Y at %I:%M %p", $unixdatetime);
 }
+
+
 
  ?>
